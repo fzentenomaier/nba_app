@@ -1,7 +1,7 @@
-pandas
-plotly
 streamlit
-yfinance
-pandas-datareader
-prophet
+pandas
+time
+plotly
+datetime
 sklearn
+numpy

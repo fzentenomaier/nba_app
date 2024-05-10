@@ -4,3 +4,4 @@ plotly
 datetime
 scikit-learn
 numpy
+lxml

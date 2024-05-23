@@ -211,6 +211,7 @@ def get_MVP_prediction(historical_data):
 
 # Main
 def main():
+    st.set_page_config(layout="wide")
     st.title('NBA Stats App')
     st.markdown(""" Welcome to the NBA stats app! Explore team and player statistics effortlessly.\n\n Powered by Python, Streamlit, Pandas, and visualization tools like Matplotlib and Plotly.\n\n Our data is sourced from Basketball-reference.com.""")
     selected_year = datetime.datetime.now().year

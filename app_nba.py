@@ -16,6 +16,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import numpy as np
 import lxml
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+
 
 nba_teams = {
     "Atlanta Hawks": "ATL",
@@ -77,7 +80,7 @@ nba_stats = {
     'PF': 'Personal Fouls',
     'PTS': 'Points'
 }
-
+data_shot = pd.read_csv('NBA_Shots_24.csv')
 
 # Functions
 @st.cache_data
@@ -128,6 +131,79 @@ def plot_sorted(df, selected_player, column, title_plot):
         yaxis=dict(title='Players'),
         hovermode='closest')
     st.plotly_chart(fig)
+    
+    
+def draw_court(ax=None, color='black', lw=2):
+    if ax is None:
+        ax = plt.gca()
+        
+    # Create the basketball hoop
+    hoop = patches.Circle((0, 0), radius=7.5, linewidth=lw, color=color, fill=False)
+
+    # Create backboard
+    backboard = plt.Line2D([-30, 30], [-7.5, -7.5], linewidth=lw, color=color)
+
+    # The paint
+    outer_box = patches.Rectangle((-80, -47.5), 160, 190, linewidth=lw, color=color, fill=False)
+    inner_box = patches.Rectangle((-60, -47.5), 120, 190, linewidth=lw, color=color, fill=False)
+    
+    # Free throw top arc
+    top_free_throw = patches.Arc((0, 142.5), 120, 120, theta1=0, theta2=180, linewidth=lw, color=color)
+    # Free throw bottom arc
+    bottom_free_throw = patches.Arc((0, 142.5), 120, 120, theta1=180, theta2=0, linewidth=lw, color=color, linestyle='dashed')
+    
+    # Restricted area
+    restricted = patches.Arc((0, 0), 80, 80, theta1=0, theta2=180, linewidth=lw, color=color)
+    
+    # Three point line
+    corner_three_a = plt.Line2D([-220, -220], [-47.5, 92.5], linewidth=lw, color=color)
+    corner_three_b = plt.Line2D([220, 220], [-47.5, 92.5], linewidth=lw, color=color)
+    three_arc = patches.Arc((0, 0), 475, 475, theta1=22, theta2=158, linewidth=lw, color=color)
+    
+    # Center Court
+    center_outer_arc = patches.Arc((0, 422.5), 120, 120, theta1=180, theta2=0, linewidth=lw, color=color)
+    center_inner_arc = patches.Arc((0, 422.5), 40, 40, theta1=180, theta2=0, linewidth=lw, color=color)
+    
+    court_elements = [hoop, outer_box, inner_box, top_free_throw, bottom_free_throw,
+                      restricted, three_arc, center_outer_arc, center_inner_arc]
+    
+    for element in court_elements:
+        ax.add_patch(element)
+        
+    # Add lines separately
+    ax.add_line(backboard)
+    ax.add_line(corner_three_a)
+    ax.add_line(corner_three_b)
+    
+    return ax
+
+def plotting_court_shot(Player):
+    data = data_shot[data_shot.PLAYER_NAME == Player]
+    
+    plt.figure(figsize=(12, 11))
+    ax = plt.gca()
+    
+    # Draw the court
+    draw_court(ax)
+    
+    # Create hexbin plot
+    hb = plt.hexbin(data['LOC_X'], data['LOC_Y'], gridsize=50, cmap='coolwarm', mincnt=1)
+    
+    # Add color bar
+    cb = plt.colorbar(hb, ax=ax)
+    cb.set_label('Shot Frequency')
+    
+    # Labels and title
+    plt.xlabel('Court X')
+    plt.ylabel('Court Y')
+    plt.title(f'{Player} Shot Chart')
+    
+    # Set the limits to half court
+    plt.xlim(-250, 250)
+    plt.ylim(422.5, -47.5)
+    
+    plt.show()
+
 
 
 def get_MVP_prediction(historical_data):
@@ -294,6 +370,7 @@ def main():
                 selected_stat = st.selectbox('Stat to Compare', df_selected_player.columns[5:])
             df_selected_player[selected_stat] = df_selected_player[selected_stat].astype(float)
             st.write(plot_sorted(df_selected_compare, selected_player, selected_stat, f'{selected_stat} - {compare_title} in 2024'))
+            plotting_court_shot(selected_player)
 
     df_selected_player = df_selected_player.sort_values(by='Year', ascending=True)
     df_selected_player['Year'] = df_selected_player['Year'].astype(str)

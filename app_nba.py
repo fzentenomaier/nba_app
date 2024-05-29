@@ -406,26 +406,16 @@ def main():
             players_df, stats_df = get_MVP_prediction(playerstats)
             players_df = players_df.head(10)
             # Create the pie chart subplot
-            # Create the pie chart subplot
             fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
-            
-            # Add annotations for player names
-            for i, player in enumerate(players_df['Player']):
-                fig.add_trace(go.Pie(labels=[f'{player}', ''], values=[players_df['MVP_Winner'].iloc[i], 100-players_df['MVP_Winner'].iloc[i]]), 1, 1)
-            
-            # Add annotations for stat names
-            for i, stat in enumerate(stats_df['Stat']):
-                fig.add_trace(go.Pie(labels=[f'{stat}', ''], values=[stats_df['Importance_%'].iloc[i], 100-stats_df['Importance_%'].iloc[i]]), 1, 2)
-            
+            fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.MVP_Winner), textinfo='label')
+            fig.add_trace(go.Pie(labels=stats_df.Stat, values=stats_df['Importance_%']),textinfo='label')
             # Use `hole` to create a donut-like pie chart
             fig.update_traces(hole=.4, hoverinfo="label+percent+name")
-            
             fig.update_layout(
                 title_text="MVP Prediction",
                 # Add annotations in the center of the donut pies.
                 annotations=[dict(text='Players', x=0.18, y=0.5, font_size=20, showarrow=False),
                              dict(text='Stats', x=0.82, y=0.5, font_size=20, showarrow=False)])
-            
             # Display the plotly chart in Streamlit
             st.plotly_chart(fig)
                     

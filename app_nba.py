@@ -264,12 +264,12 @@ def get_MVP_prediction(historical_data):
 #Plot MVP
 def create_pie_MVP(Stats_df):
     players_df, stats_df = get_MVP_prediction(Stats_df)
-
 # Create subplots: use 'domain' type for Pie subplot
     fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
-    fig.add_trace(go.Pie(players_df),
+    
+    fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.MVP_Winner),
                   1, 1)
-    fig.add_trace(go.Pie(stats_df),
+    fig.add_trace(go.Pie(labels=stats_df.Stat, values=stats_df['Importance_%']),
                   1, 2)
     
     # Use `hole` to create a donut-like pie chart

@@ -355,6 +355,11 @@ def main():
             # Add color bar
             cb = fig.colorbar(hb, ax=ax)
             cb.set_label('Shot Frequency')
+            # Remove axis labels and ticks
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
             # Labels and title
             ax.set_title('NBA Shot Chart')
             # Set the limits to half court

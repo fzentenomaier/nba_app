@@ -361,7 +361,7 @@ def main():
             ax.set_xticklabels([])
             ax.set_yticklabels([])
             # Labels and title
-            ax.set_title('NBA Shot Chart')
+            ax.set_title(f'{selected_player} Shot Chart')
             # Set the limits to half court
             ax.set_xlim(-250, 250)
             ax.set_ylim(422.5, -47.5)

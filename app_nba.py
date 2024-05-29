@@ -411,7 +411,7 @@ def main():
             fig.add_trace(go.Pie(labels=stats_df.Stat, values=stats_df['Importance_%'], textinfo='label'),1,2)
             # Use `hole` to create a donut-like pie chart
             fig.update_traces(hole=.4, hoverinfo="label+percent+name")
-            fig.update_layout(
+            fig.update_layout(showlegend=False,
                 title_text="MVP Prediction",
                 # Add annotations in the center of the donut pies.
                 annotations=[dict(text='Players', x=0.18, y=0.5, font_size=20, showarrow=False),

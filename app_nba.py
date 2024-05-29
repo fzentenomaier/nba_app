@@ -346,28 +346,22 @@ def main():
             df_selected_player[selected_stat] = df_selected_player[selected_stat].astype(float)
             st.write(plot_sorted(df_selected_compare, selected_player, selected_stat, f'{selected_stat} - {compare_title} in 2024'))
             st.header('Shot Chart')
-            st.dataframe(data)
-            fig, ax = plt.subplots(figsize=(12, 11))
-        
+            fig, ax = plt.subplots(figsize=(8, 7))
+            ax.set_facecolor('black')
+            # Draw the court
+            draw_court(ax, color='white')  # Court elements in white
             # Draw the court
             draw_court(ax)
-        
             # Create hexbin plot
             hb = ax.hexbin(data['LOC_X'], data['LOC_Y'], gridsize=50, cmap='coolwarm', mincnt=1)
-        
             # Add color bar
             cb = fig.colorbar(hb, ax=ax)
             cb.set_label('Shot Frequency')
-        
             # Labels and title
-            ax.set_xlabel('Court X')
-            ax.set_ylabel('Court Y')
             ax.set_title('NBA Shot Chart')
-        
             # Set the limits to half court
             ax.set_xlim(-250, 250)
             ax.set_ylim(422.5, -47.5)
-        
             # Display the plot in Streamlit
             st.pyplot(fig)
             

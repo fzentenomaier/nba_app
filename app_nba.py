@@ -370,7 +370,7 @@ def main():
                 selected_stat = st.selectbox('Stat to Compare', df_selected_player.columns[5:])
             df_selected_player[selected_stat] = df_selected_player[selected_stat].astype(float)
             st.write(plot_sorted(df_selected_compare, selected_player, selected_stat, f'{selected_stat} - {compare_title} in 2024'))
-            plotting_court_shot(selected_player)
+            st.write(plotting_court_shot(selected_player))
 
     df_selected_player = df_selected_player.sort_values(by='Year', ascending=True)
     df_selected_player['Year'] = df_selected_player['Year'].astype(str)

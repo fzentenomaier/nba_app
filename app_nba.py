@@ -346,6 +346,7 @@ def main():
             df_selected_player[selected_stat] = df_selected_player[selected_stat].astype(float)
             st.write(plot_sorted(df_selected_compare, selected_player, selected_stat, f'{selected_stat} - {compare_title} in 2024'))
             st.header('Shot Chart')
+            st.dataframe(data)
             plt.figure(figsize=(12, 11))
             ax = plt.gca()
             # Draw the court

@@ -177,32 +177,6 @@ def draw_court(ax=None, color='black', lw=2):
     
     return ax
 
-def plotting_court_shot(Player):
-    data = data_shot[data_shot.PLAYER_NAME == Player]
-    
-    plt.figure(figsize=(12, 11))
-    ax = plt.gca()
-    
-    # Draw the court
-    draw_court(ax)
-    
-    # Create hexbin plot
-    hb = plt.hexbin(data['LOC_X'], data['LOC_Y'], gridsize=50, cmap='coolwarm', mincnt=1)
-    
-    # Add color bar
-    cb = plt.colorbar(hb, ax=ax)
-    cb.set_label('Shot Frequency')
-    
-    # Labels and title
-    plt.xlabel('Court X')
-    plt.ylabel('Court Y')
-    plt.title(f'{Player} Shot Chart')
-    
-    # Set the limits to half court
-    plt.xlim(-250, 250)
-    plt.ylim(422.5, -47.5)
-    
-    plt.show()
 
 
 
@@ -352,6 +326,7 @@ def main():
              A DataFrame with the stats of the {selected_player} from the last {df_selected_player.shape[0]} years
         """)
         with st.spinner(f'Loading {selected_player} stats'):
+            data = data_shot[data_shot.PLAYER_NAME == selected_player]
             teamstats_year.reset_index(drop=True, inplace=True)
             st.dataframe(df_selected_player)
             st.write('Data Dimension: ' + str(df_selected_player.shape[0]) + ' rows and ' + str(df_selected_player.shape[1]) + ' columns.')
@@ -370,7 +345,31 @@ def main():
                 selected_stat = st.selectbox('Stat to Compare', df_selected_player.columns[5:])
             df_selected_player[selected_stat] = df_selected_player[selected_stat].astype(float)
             st.write(plot_sorted(df_selected_compare, selected_player, selected_stat, f'{selected_stat} - {compare_title} in 2024'))
-            st.write(plotting_court_shot(selected_player))
+            
+            plt.figure(figsize=(12, 11))
+            ax = plt.gca()
+            # Draw the court
+            draw_court(ax)
+            # Create hexbin plot
+            hb = plt.hexbin(data['LOC_X'], data['LOC_Y'], gridsize=50, cmap='coolwarm', mincnt=1)
+            # Add color bar
+            cb = plt.colorbar(hb, ax=ax)
+            cb.set_label('Shot Frequency')
+            # Labels and title
+            plt.xlabel('Court X')
+            plt.ylabel('Court Y')
+            plt.title(f'{selected_player} Shot Chart')
+            # Set the limits to half court
+            plt.xlim(-250, 250)
+            plt.ylim(422.5, -47.5)
+            plt.show()
+            
+            
+            
+            
+            
+            
+            
 
     df_selected_player = df_selected_player.sort_values(by='Year', ascending=True)
     df_selected_player['Year'] = df_selected_player['Year'].astype(str)

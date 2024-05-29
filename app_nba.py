@@ -350,8 +350,6 @@ def main():
             ax.set_facecolor('black')
             # Draw the court
             draw_court(ax, color='white')  # Court elements in white
-            # Draw the court
-            draw_court(ax)
             # Create hexbin plot
             hb = ax.hexbin(data['LOC_X'], data['LOC_Y'], gridsize=50, cmap='coolwarm', mincnt=1)
             # Add color bar
@@ -364,10 +362,6 @@ def main():
             ax.set_ylim(422.5, -47.5)
             # Display the plot in Streamlit
             st.pyplot(fig)
-            
-            
-            
-            
             
             
 

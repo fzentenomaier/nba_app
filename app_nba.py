@@ -261,27 +261,6 @@ def get_MVP_prediction(historical_data):
     feature_importance_df['Importance_%'] = feature_importance_df['Importance_%']*100
     return results, feature_importance_df
 
-#Plot MVP
-def create_pie_MVP(Stats_df):
-    players_df, stats_df = get_MVP_prediction(Stats_df)
-# Create subplots: use 'domain' type for Pie subplot
-    fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
-    
-    fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.MVP_Winner),
-                  1, 1)
-    fig.add_trace(go.Pie(labels=stats_df.Stat, values=stats_df['Importance_%']),
-                  1, 2)
-    
-    # Use `hole` to create a donut-like pie chart
-    fig.update_traces(hole=.4, hoverinfo="label+percent+name")
-    
-    fig.update_layout(
-        title_text="MVP Prediction",
-        # Add annotations in the center of the donut pies.
-        annotations=[dict(text='Players', x=0.18, y=0.5, font_size=20, showarrow=False),
-                     dict(text='Stats', x=0.82, y=0.5, font_size=20, showarrow=False)])
-    fig.show()
-
 # Main
 def main():
     st.set_page_config(layout="wide")
@@ -425,7 +404,25 @@ def main():
 
         with st.spinner('Loading MVP Prediction'):
             col1, col2, col3 = st.columns([20,1,20])
-            st.write(create_pie_MVP(playerstats))
+            players_df, stats_df = get_MVP_prediction(playerstats)
+            fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
+            
+            fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.MVP_Winner),
+                          1, 1)
+            fig.add_trace(go.Pie(labels=stats_df.Stat, values=stats_df['Importance_%']),
+                          1, 2)
+            
+            # Use `hole` to create a donut-like pie chart
+            fig.update_traces(hole=.4, hoverinfo="label+percent+name")
+            
+            fig.update_layout(
+                title_text="MVP Prediction",
+                # Add annotations in the center of the donut pies.
+                annotations=[dict(text='Players', x=0.18, y=0.5, font_size=20, showarrow=False),
+                             dict(text='Stats', x=0.82, y=0.5, font_size=20, showarrow=False)])
+            fig.show()
+
+            
             with col1:
                 st.dataframe(get_MVP_prediction(playerstats)[0])
             with col3:

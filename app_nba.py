@@ -409,8 +409,13 @@ def main():
             # Create the pie chart subplot
             fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
             
-            fig.add_trace(go.Pie(labels=['Player'] * len(players_df), values=players_df.MVP_Winner), 1, 1)
-            fig.add_trace(go.Pie(labels=['Stat'] * len(stats_df), values=stats_df['Importance_%']), 1, 2)
+            # Add annotations for player names
+            for i, player in enumerate(players_df['Player']):
+                fig.add_trace(go.Pie(labels=[f'{player}', ''], values=[players_df['MVP_Winner'].iloc[i], 100-players_df['MVP_Winner'].iloc[i]]), 1, 1)
+            
+            # Add annotations for stat names
+            for i, stat in enumerate(stats_df['Stat']):
+                fig.add_trace(go.Pie(labels=[f'{stat}', ''], values=[stats_df['Importance_%'].iloc[i], 100-stats_df['Importance_%'].iloc[i]]), 1, 2)
             
             # Use `hole` to create a donut-like pie chart
             fig.update_traces(hole=.4, hoverinfo="label+percent+name")

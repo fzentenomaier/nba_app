@@ -404,10 +404,11 @@ def main():
 
         with st.spinner('Loading MVP Prediction'):
             players_df, stats_df = get_MVP_prediction(playerstats)
-            players_df = players_df.head(20)
+            players_df['Odds'] = players_df['MVP_Winner']/players_df['MVP_Winner'].sum()
+            players_df = players_df.head(10)
             # Create the pie chart subplot
             fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
-            fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.MVP_Winner, textinfo='label'),1,1)
+            fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.Odds, textinfo='label'),1,1)
             fig.add_trace(go.Pie(labels=stats_df.Stat, values=stats_df['Importance_%'], textinfo='label'),1,2)
             # Use `hole` to create a donut-like pie chart
             fig.update_traces(hole=.4, hoverinfo="label+percent+name")

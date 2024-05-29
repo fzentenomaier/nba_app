@@ -403,8 +403,8 @@ def main():
         """)
 
         with st.spinner('Loading MVP Prediction'):
-            col1, col2, col3 = st.columns([20,1,20])
             players_df, stats_df = get_MVP_prediction(playerstats)
+            players_df = players_df.head(10)
             # Create the pie chart subplot
             fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
             fig.add_trace(go.Pie(labels=players_df.Player, values=players_df.MVP_Winner), 1, 1)
@@ -416,14 +416,8 @@ def main():
                 # Add annotations in the center of the donut pies.
                 annotations=[dict(text='Players', x=0.18, y=0.5, font_size=20, showarrow=False),
                              dict(text='Stats', x=0.82, y=0.5, font_size=20, showarrow=False)])
-            
             # Display the plotly chart in Streamlit
             st.plotly_chart(fig)
-            
-            with col1:
-                st.dataframe(get_MVP_prediction(playerstats)[0])
-            with col3:
-                st.dataframe(get_MVP_prediction(playerstats)[1])
                     
     st.markdown("##")
     st.markdown("##")
